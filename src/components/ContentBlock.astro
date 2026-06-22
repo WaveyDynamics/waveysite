@@ -9,7 +9,7 @@ interface Props {
 const { label, body, image, href, reverse = false } = Astro.props;
 ---
 
-<section class="max-w-[1400px] mx-auto px-8 py-12">
+<section class="max-w-[1400px] mx-auto px-4 md:px-8 py-12">
   <div class={`flex flex-col ${reverse ? 'md:flex-row-reverse' : 'md:flex-row'} items-start`}>
     <div class="w-full md:w-[45%] flex-shrink-0">
       <div
@@ -22,7 +22,7 @@ const { label, body, image, href, reverse = false } = Astro.props;
         </div>
       </div>
     </div>
-    <div class="w-full md:w-[55%] flex flex-col items-center text-center px-10 py-6">
+    <div class="w-full md:w-[55%] flex flex-col items-center text-center px-4 md:px-10 py-6">
       <p class="leading-relaxed">{body}</p>
       {href && (
         <a href={href} class="inline-block mt-8 border border-(--color-border) px-6 py-2 text-sm no-underline hover:border-(--color-accent) hover:text-(--color-accent) transition-colors">
