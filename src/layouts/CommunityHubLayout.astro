@@ -1,0 +1,36 @@
+---
+import Layout from './Layout.astro';
+
+interface Props {
+  title: string;
+  heading: string;
+  subheading?: string;
+  description?: string;
+}
+
+const { title, heading, subheading, description } = Astro.props;
+---
+
+<Layout title={title} description={description}>
+  <section class="relative w-full flex overflow-hidden" style="min-height:180px;height:calc(35vh + 10px);">
+    <div class="flex-1 bg-cover bg-center"
+      style="background-image:linear-gradient(rgba(25,227,196,0.18), rgba(10,12,15,0.55)),url('/images/pages/concierge-hero.jpg');"></div>
+    <div class="w-[35%] shrink-0 hidden md:block" style="background-color:#19E3C4;"></div>
+    <div class="absolute inset-0 flex items-end pb-[20px]">
+      <div class="w-full pl-5 md:pl-[200px] lg:pl-[412px]">
+        <h1 class="wd-hero-h1" set:html={heading}></h1>
+      </div>
+    </div>
+  </section>
+
+  {subheading && (
+    <div class="max-w-[1030px] mx-auto px-5 md:px-[65px] pt-[15px] pb-[15px]">
+      <p class="wd-subheading">{subheading}</p>
+      <div class="mt-4 w-[50px] h-[2px] bg-black"></div>
+    </div>
+  )}
+
+  <div class="max-w-[1030px] mx-auto px-5 md:px-[65px] pt-12 pb-24">
+    <slot />
+  </div>
+</Layout>

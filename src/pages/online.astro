@@ -1,0 +1,85 @@
+---
+import ArticleLayout from '../layouts/ArticleLayout.astro';
+
+const CHANNEL_ID = 'UCzlllROxb1ZVulW1zp31rqw';
+
+let videos: { videoId: string; title: string; thumbnail: string; href: string; date: string }[] = [];
+try {
+  const res = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`);
+  if (res.ok) {
+    const xml = await res.text();
+    const entries = [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)];
+    videos = entries.slice(0, 6).map(([, entry]) => {
+      const videoId = entry.match(/<yt:videoId>(.*?)<\/yt:videoId>/)?.[1] ?? '';
+      const rawTitle = entry.match(/<title>(.*?)<\/title>/)?.[1] ?? '';
+      const published = entry.match(/<published>(.*?)<\/published>/)?.[1] ?? '';
+      const title = rawTitle
+        .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+      return {
+        videoId,
+        title,
+        thumbnail: `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`,
+        href: `https://www.youtube.com/watch?v=${videoId}`,
+        date: published
+          ? new Date(published).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+          : '',
+      };
+    });
+  }
+} catch {}
+---
+
+<ArticleLayout
+  title="Wavey Dynamics Online | Wavey Dynamics"
+  heading="WAVEY DYNAMICS ONLINE"
+  subheading="To teach. To inspire. To entertain."
+  image="/images/pages/online-hero.jpg"
+  imagePosition="center"
+  description="Wavey Dynamics on YouTube and Instagram: technical breakdowns, product development insights, trackside engineering and motorsport concepts explained."
+>
+
+  <h2 class="mb-4 uppercase tracking-widest">YouTube</h2>
+  <p class="mb-5 leading-relaxed">Our YouTube channel is dedicated to bring a new energy to technical and engineering content. Here, we keep our community up to date with latest projects, engineering related ideas and contribute snapshots of knowledge we've picked up on our journey.</p>
+  <p class="mb-5 leading-relaxed">Primarily focused around automotive and motorsport technology, you can expect to see videos covering:</p>
+  <ul class="wd-list mb-8 space-y-2 leading-relaxed list-none">
+    <li>Product development insights</li>
+    <li>Technical breakdowns</li>
+    <li>Hands on/trackside engineering</li>
+    <li>Product analysis</li>
+    <li>Podcast style discussions</li>
+    <li>Explanations of technical concepts</li>
+    <li>The day-to-day of an engineering consultant</li>
+  </ul>
+
+  {videos.length > 0 ? (
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+      {videos.map(v => (
+        <a href={v.href} target="_blank" rel="noopener" class="no-underline group">
+          <div class="overflow-hidden mb-2" style="aspect-ratio:16/9;">
+            <img
+              src={v.thumbnail}
+              alt={v.title}
+              class="w-full h-full object-cover transition-opacity duration-200 group-hover:opacity-80"
+              loading="lazy"
+            />
+          </div>
+          <p class="text-[11px] mb-1" style="font-family:'Gotham Light',sans-serif;color:rgba(0,0,0,0.38);">{v.date}</p>
+          <p class="text-[13px] leading-snug" style="font-family:'Gotham Light',sans-serif;color:rgba(0,0,0,0.78);">{v.title}</p>
+        </a>
+      ))}
+    </div>
+  ) : (
+    <div class="mb-10"></div>
+  )}
+
+  <div class="flex gap-4 mb-14">
+    <a href="https://www.youtube.com/@waveydynamics" target="_blank" rel="noopener" class="inline-block border border-(--color-border) px-6 py-2 text-sm no-underline hover:border-(--color-accent) hover:text-(--color-accent) transition-colors">View the Channel →</a>
+  </div>
+
+  <h2 class="mb-4 uppercase tracking-widest">Instagram</h2>
+  <p class="mb-5 leading-relaxed">On our Instagram we post stories and pages on our latest work, day-to-day business and 'tech bites' of content in the form of slides and pictures which demonstrate and explain technical concepts in an easy, digestible manner. Here we also keep our community up to date with latest YouTube posts and published articles.</p>
+  <p class="mb-8 leading-relaxed">Follow us <strong>@waveydynamics</strong></p>
+  <a href="https://www.instagram.com/waveydynamics" target="_blank" rel="noopener" class="inline-block border border-(--color-border) px-6 py-2 text-sm no-underline hover:border-(--color-accent) hover:text-(--color-accent) transition-colors">Visit our Instagram →</a>
+
+</ArticleLayout>

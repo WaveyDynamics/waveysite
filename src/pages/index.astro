@@ -1,0 +1,54 @@
+﻿---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import ContentBlock from '../components/ContentBlock.astro';
+---
+
+<Layout title="Wavey Dynamics" description="Wavey Dynamics: specialist motorsport and automotive engineering consultancy. Vehicle dynamics, aerodynamics and engineering design — data-driven performance development for race teams and high-performance road cars.">
+  <Hero
+    heading="Specialist Motorsport & Automotive<br>Engineering"
+    image="/images/home-hero.jpg"
+  />
+
+  <div class="max-w-[1030px] mx-auto px-[65px] pt-[15px] pb-[15px]">
+    <p class="text-[18px]" style="font-family:'Work Sans',sans-serif;font-weight:200;">We bridge the gap between a deep understanding of technology and clear performance outcomes.</p>
+    <div class="mt-4 w-[50px] h-[2px] bg-black"></div>
+  </div>
+
+  <ContentBlock
+    label="Motorsport"
+    body="Utilising the advantage that our combined aerodynamics and vehicle dynamics experience brings to motorsport, we consider race car development with a tyre-centric approach. Understanding the interactions of vehicle systems and developing them to complement each other is our forte."
+    image="/images/home-motorsport.jpg"
+    href="/consulting-motorsport"
+  />
+
+  <ContentBlock
+    label="Vehicle Dynamics"
+    body="We are specialists in vehicle dynamics, where a depth of knowledge and methodical approach produces tangible performance outcomes. With a clear mission to work with the best, constant research and development in the discipline enables us to shine in a wide range of applications, from ride comfort and NVH for the road to closing down on your competitors at the track."
+    image="/images/home-vehicledynamics.jpg"
+    href="/consulting-vehicledynamics"
+    reverse
+  />
+
+  <ContentBlock
+    label="Aerodynamics"
+    body="Working tirelessly with vehicle dynamics in any performance application, the art of aerodynamics can enhance or detract from a platform's competitiveness. This relationship motivates us towards excellence in both specialities. Whether you're maximising downforce or optimising your EV efficiency, we're equipped get you there."
+    image="/images/home-aerodynamics.jpg"
+    href="/consulting-aerodynamics"
+  />
+
+  <ContentBlock
+    label="Engineering Design"
+    body="Understanding the benefit of providing a full service, the expertise to deliver creative solutions from initial concept through to prototype production and final design sign-off is essential. Biomimetics and an exploration of natural engineering solutions is a passion of ours and forms the foundation of our approach."
+    image="/images/home-engineeringdesign.jpg"
+    href="/consulting-development"
+    reverse
+  />
+
+  <ContentBlock
+    label="Concierge"
+    body="The Wavey Dynamics Concierge is for high performance road and supercar owners who have a passion to create bespoke iterations of their chosen machines. With our motorsport experience, we're able to extend our services to offer customised, performance oriented design solutions to road cars — using motorsport R&D techniques to turn excellence into mastery."
+    image="/images/home-concierge.png"
+    href="/concierge"
+  />
+</Layout>

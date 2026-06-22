@@ -1,0 +1,19 @@
+---
+interface Props {
+  heading: string;
+  subheading?: string;
+  image?: string;
+  imagePosition?: string;
+  imageHeight?: string;
+}
+const { heading, image, imagePosition = 'center', imageHeight = 'calc(35vh + 10px)' } = Astro.props;
+---
+
+<section
+  class="relative w-full flex items-end bg-cover"
+  style={`min-height:180px; height:${imageHeight}; background-position:${imagePosition};` + (image ? `background-image: linear-gradient(rgba(25,227,196,0.18), rgba(10,12,15,0.55)), url('${image}')` : 'background-color:#1a1d21')}
+>
+  <div class="w-full pb-[20px] pl-5 md:pl-[200px] lg:pl-[412px]">
+    <h1 class="wd-hero-h1" set:html={heading}></h1>
+  </div>
+</section>

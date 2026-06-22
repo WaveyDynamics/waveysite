@@ -1,0 +1,534 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const blogEntries = await getCollection('blog');
+  return blogEntries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+
+const wordCount = (entry.body ?? '').split(/\s+/).filter(Boolean).length;
+const readTime = Math.max(1, Math.round(wordCount / 200));
+const categories = entry.data.categories ?? [];
+const formattedDate = new Date(entry.data.date).toLocaleDateString('en-GB', {
+  day: 'numeric', month: 'long', year: 'numeric',
+});
+
+function extractFirstImage(body: string): string | null {
+  const m = body.match(/!\[.*?\]\((https?:\/\/[^\s)]+)\)/);
+  return m ? m[1] : null;
+}
+
+const tocHeadings = headings.filter(h => h.depth >= 2 && h.depth <= 3);
+const showToc = tocHeadings.length >= 4;
+
+const allPosts = await getCollection('blog', ({ id }) => !id.startsWith('_'));
+const related = allPosts
+  .filter(p => p.id !== entry.id && (p.data.categories ?? []).some(c => categories.includes(c)))
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 3)
+  .map(p => ({ ...p, thumbnail: extractFirstImage(p.body ?? '') }));
+
+const pageUrl = `https://waveydynamics.com/blog/${entry.id}`;
+const encodedUrl = encodeURIComponent(pageUrl);
+const encodedTitle = encodeURIComponent(entry.data.title);
+const ogImage = extractFirstImage(entry.body ?? '') ?? undefined;
+
+const jsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": entry.data.title,
+  "description": entry.data.seoDescription || entry.data.excerpt || '',
+  "image": ogImage || "https://waveydynamics.com/logo.png",
+  "datePublished": entry.data.date,
+  "dateModified": entry.data.updated || entry.data.date,
+  "author": { "@type": "Organization", "name": "Wavey Dynamics", "url": "https://waveydynamics.com" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Wavey Dynamics",
+    "logo": { "@type": "ImageObject", "url": "https://waveydynamics.com/logo.png" }
+  },
+  "url": pageUrl
+});
+---
+
+<Layout
+  title={entry.data.seoTitle ? `${entry.data.seoTitle} | Wavey Dynamics` : `${entry.data.title} | Wavey Dynamics`}
+  description={entry.data.seoDescription || entry.data.excerpt || entry.data.title}
+  ogImage={ogImage}
+  canonicalUrl={pageUrl}
+  jsonLd={jsonLd}
+>
+
+  <!-- Reading progress bar -->
+  <div id="progress-bar" aria-hidden="true"></div>
+
+  <div class="article-shell">
+
+    <!-- Breadcrumb -->
+    <div class="pt-10 pb-0">
+      <a href="/articles" class="crumb">← Field Notes</a>
+    </div>
+
+    <!-- Header -->
+    <header class="pt-8 pb-10">
+      <p class="article-stamp">{formattedDate}{categories.length > 0 ? ` / ${categories.map(c => c.toUpperCase()).join(' / ')}` : ''} / {readTime} MIN READ</p>
+      <div class="article-bar"></div>
+      <h1 class="article-title">{entry.data.title}</h1>
+      {categories.length > 0 && (
+        <div class="cat-row">
+          {categories.map(cat => <span class="cat-pill">{cat}</span>)}
+        </div>
+      )}
+    </header>
+
+    <!-- Table of contents -->
+    {showToc && (
+      <details class="toc-block" open>
+        <summary class="toc-toggle">Contents</summary>
+        <nav class="toc-nav">
+          <ol>
+            {tocHeadings.map(h => (
+              <li class={h.depth === 3 ? 'toc-sub' : ''}>
+                <a href={`#${h.slug}`} class="toc-link">{h.text}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      </details>
+    )}
+
+    <!-- Article body -->
+    <div class="wd-prose">
+      <Content />
+    </div>
+
+    <!-- Share row -->
+    <div class="share-row">
+      <span class="share-label">Share</span>
+      <a href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`}
+        target="_blank" rel="noopener" class="share-btn" aria-label="Share on X">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63 5.905-5.63Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
+      </a>
+      <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`}
+        target="_blank" rel="noopener" class="share-btn" aria-label="Share on LinkedIn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+          <rect width="24" height="24" rx="3" fill="currentColor"/>
+          <path d="M7.5 9.5h-3v9h3v-9Zm-1.5-1a1.75 1.75 0 1 0 0-3.5 1.75 1.75 0 0 0 0 3.5Zm11.5 1c-1.6 0-2.6.7-3 1.4V9.5h-3v9h3v-4.75c0-1.25.75-2.25 2-2.25s2 1 2 2.25V18.5h3v-5c0-2.5-1.5-4-4-4Z" fill="white"/>
+        </svg>
+      </a>
+      <button id="copy-btn" class="share-btn" aria-label="Copy link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+      </button>
+      <span id="copy-confirm" class="copy-confirm" aria-live="polite"></span>
+    </div>
+
+    <!-- Related articles -->
+    {related.length > 0 && (
+      <section class="related-section">
+        <hr class="rule" />
+        <p class="related-label">Related Field Notes</p>
+        <div class="related-grid">
+          {related.map(r => {
+            const rCats = r.data.categories ?? [];
+            const rDate = new Date(r.data.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+            return (
+              <a href={`/blog/${r.id}`} class="related-card">
+                <div class="related-thumb">
+                  {r.thumbnail
+                    ? <img src={r.thumbnail} alt="" loading="lazy" />
+                    : <div class="related-thumb-fill" />
+                  }
+                </div>
+                <div class="related-body">
+                  {rCats.length > 0 && <span class="cat-pill cat-pill-sm">{rCats[0]}</span>}
+                  <p class="related-title">{r.data.title}</p>
+                  <p class="related-date">{rDate}</p>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )}
+
+  </div><!-- /article-shell -->
+
+</Layout>
+
+<style>
+  /* ── Shell — mirrors ArticleLayout ── */
+  #progress-bar {
+    position: fixed; top: 0; left: 0; height: 2px; width: 0%;
+    background: #19E3C4; z-index: 100; transition: width 0.08s linear;
+    pointer-events: none;
+  }
+  .article-shell {
+    max-width: 1030px;
+    margin: 0 auto;
+    padding-left: 65px;
+    padding-right: 65px;
+    padding-bottom: 6rem;
+  }
+
+  /* ── Header ── */
+  .crumb {
+    font-family: 'Gotham Light', sans-serif; font-size: 11px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(0,0,0,0.38); text-decoration: none;
+  }
+  .crumb:hover { color: #19E3C4; }
+
+  .cat-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 1rem; }
+  .cat-pill {
+    font-family: 'Gotham Light', sans-serif; font-size: 10px;
+    letter-spacing: 0.14em; text-transform: uppercase; color: #19E3C4;
+  }
+  .cat-pill-sm { font-size: 9px; }
+
+  .article-stamp {
+    font-family: 'Courier New', monospace; font-size: 11px;
+    letter-spacing: 0.08em; color: rgba(0,0,0,0.32); margin: 0 0 14px 0;
+  }
+  .article-bar {
+    width: 100%; height: 2px; background: #19E3C4; margin-bottom: 22px;
+  }
+  .article-title {
+    font-family: 'Gotham Medium', sans-serif; font-weight: 500;
+    font-size: 30px; line-height: 1.3; letter-spacing: 0.01em;
+    color: rgba(0,0,0,0.88); margin: 0 0 16px 0;
+  }
+  .rule { border: none; border-top: 1px solid rgba(0,0,0,0.1); margin: 0; }
+
+  /* ── Table of contents ── */
+  .toc-block {
+    margin: 2rem 0 2.8rem;
+    border: 1px solid rgba(0,0,0,0.08);
+    padding: 0;
+  }
+  .toc-toggle {
+    font-family: 'Gotham Medium', sans-serif; font-size: 11px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(0,0,0,0.78); cursor: pointer;
+    padding: 0.9rem 1.2rem; list-style: none;
+    display: flex; align-items: center; gap: 8px;
+    user-select: none;
+  }
+  .toc-toggle::-webkit-details-marker { display: none; }
+  .toc-toggle::before {
+    content: '▸'; color: #19E3C4; font-size: 10px;
+    transition: transform 0.2s;
+  }
+  details[open] .toc-toggle::before { transform: rotate(90deg); }
+  .toc-nav { padding: 0 1.2rem 1.1rem 1.2rem; }
+  .toc-nav ol { list-style: decimal; padding-left: 1.4rem; margin: 0; }
+  .toc-nav li { margin-bottom: 0.35rem; font-size: 12px; font-family: 'Gotham Light', sans-serif; }
+  .toc-nav li.toc-sub { padding-left: 1.2rem; }
+  .toc-link {
+    font-family: 'Gotham Light', sans-serif; font-size: 12px;
+    letter-spacing: 0.04em; color: rgba(0,0,0,0.55); text-decoration: none;
+  }
+  .toc-link:hover { color: #19E3C4; }
+
+  /* ── Prose typography — mirrors long-days-long-nights ── */
+  .wd-prose {
+    font-family: 'Gotham Light', sans-serif;
+    font-weight: 300; font-size: 16px;
+    line-height: 1.625;
+    color: rgba(0,0,0,0.72);
+    padding-top: 2.4rem;
+  }
+
+  /* Hide the duplicated H1 from markdown (already in header) */
+  .wd-prose :global(h1) { display: none; }
+
+  .wd-prose :global(p) { margin-top: 0; margin-bottom: 1.25rem; }
+  /* markdown wraps blank-line list items in <p> — kill that extra margin */
+  .wd-prose :global(li > p) { margin-bottom: 0; }
+
+  /* ── H2 — section headings ── */
+  .wd-prose :global(h2) {
+    font-family: 'Futura Book', sans-serif; font-weight: 400;
+    font-size: 13px; letter-spacing: 0.10em; text-transform: uppercase;
+    color: rgba(0,0,0,0.86); line-height: 1.4;
+    margin-top: 3rem; margin-bottom: 1.4rem;
+    border-left: 3px solid #19E3C4;
+    border-bottom: 1.5px solid #19E3C4;
+    border-bottom-left-radius: 6px;
+    padding-left: 12px;
+    padding-bottom: 5px;
+    width: fit-content;
+  }
+
+  /* ── H3 — paragraph-level sub-heading, subtle ── */
+  .wd-prose :global(h3) {
+    font-family: 'Gotham Medium', sans-serif; font-weight: 500;
+    font-size: 15px;
+    color: rgba(0,0,0,0.82); margin: 0;
+    padding-top: 1.25rem; margin-bottom: 0.4rem;
+  }
+
+  /* ── KaTeX equations — left-align, 22px ── */
+  .wd-prose :global(.katex) { font-size: 1.43em; }
+  .wd-prose :global(.katex-display) {
+    text-align: left;
+    margin: 1.25rem 0;
+  }
+  .wd-prose :global(.katex-display > .katex) {
+    text-align: left;
+    display: inline-block;
+  }
+  /* Scale up sub/superscripts so numerators and denominators read closer to full size */
+  .wd-prose :global(.katex .mtight) { font-size: 0.88em !important; }
+  .wd-prose :global(h4) {
+    font-family: 'Gotham Light', sans-serif; font-weight: 300;
+    font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(0,0,0,0.5); margin: 0;
+    padding-top: 1.4em; margin-bottom: 0.7em;
+  }
+
+  /* ── Inline ── */
+  .wd-prose :global(strong) {
+    font-family: 'Gotham Medium', sans-serif; font-weight: 500;
+    color: rgba(0,0,0,0.82);
+  }
+  .wd-prose :global(em) { font-style: italic; color: rgba(0,0,0,0.62); }
+  .wd-prose :global(a) { color: #19E3C4; text-decoration: none; }
+  .wd-prose :global(a:hover) { text-decoration: underline; }
+
+  /* ── Lists — wd-list style, matching long-days-long-nights ── */
+  .wd-prose :global(ul) {
+    list-style: none; padding-left: 0;
+    margin: 0 0 1.25rem 0; line-height: 1.625;
+  }
+  .wd-prose :global(ul > li) {
+    display: flex; align-items: flex-start; gap: 8px;
+    margin-top: 0.5rem;
+  }
+  .wd-prose :global(ul > li:first-child) { margin-top: 0; }
+  .wd-prose :global(ul > li::before) {
+    content: ''; flex-shrink: 0;
+    width: 5px; height: 5px;
+    background: #19E3C4; margin-top: 8px;
+  }
+  .wd-prose :global(ol) {
+    padding-left: 1.4rem; margin: 0 0 1.25rem 0; line-height: 1.625;
+  }
+  .wd-prose :global(ol > li) { margin-top: 0.5rem; }
+  .wd-prose :global(ol > li:first-child) { margin-top: 0; }
+  /* Nested lists */
+  .wd-prose :global(li > ul),
+  .wd-prose :global(li > ol) {
+    margin: 0.5rem 0 0 1rem; padding-left: 0;
+  }
+  .wd-prose :global(li > ul > li::before) {
+    width: 4px; height: 4px; background: rgba(0,0,0,0.28); margin-top: 9px;
+  }
+
+  /* ── Images ── */
+  .wd-prose :global(img) {
+    max-width: 100%; height: auto; display: block;
+    margin-top: 0; margin-bottom: 1.25rem; margin-left: auto; margin-right: auto;
+  }
+  .wd-prose :global(img[src$=".png"]) {
+    max-width: 500px;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .wd-prose :global(figure) { margin: 2rem 0; }
+  .wd-prose :global(figcaption) {
+    font-family: 'Gotham Light', sans-serif; font-size: 11px;
+    letter-spacing: 0.06em; color: rgba(0,0,0,0.38);
+    margin-top: 0.6em; text-align: center; font-style: italic;
+  }
+
+  /* ── Blockquote ── */
+  .wd-prose :global(blockquote) {
+    border-left: 2px solid #19E3C4;
+    margin: 2.4em 0; padding: 0.4em 0 0.4em 1.8em;
+    font-size: 15px; line-height: 1.85;
+    color: rgba(0,0,0,0.52); font-style: italic;
+  }
+  .wd-prose :global(blockquote p) { margin-bottom: 0; }
+
+  /* ── Horizontal rule ── */
+  .wd-prose :global(hr) {
+    border: none; border-top: 1px solid rgba(0,0,0,0.1); margin: 3em 0;
+  }
+
+  /* ── Code ── */
+  .wd-prose :global(code) {
+    font-family: 'Courier New', monospace; font-size: 15px;
+    background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 2px;
+    letter-spacing: 0;
+  }
+  .wd-prose :global(pre) {
+    background: rgba(0,0,0,0.04); border-left: 2px solid rgba(0,0,0,0.1);
+    padding: 1.2em 1.5em; overflow-x: auto; margin: 2em 0;
+    font-size: 13px; line-height: 1.65; letter-spacing: 0;
+  }
+  .wd-prose :global(pre code) { background: none; padding: 0; border-radius: 0; }
+
+  /* ── Tables ── */
+  .wd-prose :global(table) {
+    width: 100%; border-collapse: collapse; margin: 2em 0; font-size: 15px;
+  }
+  .wd-prose :global(th) {
+    font-family: 'Gotham Light', sans-serif; font-size: 10px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 8px 12px; border-bottom: 1px solid rgba(0,0,0,0.15);
+    color: rgba(0,0,0,0.45);
+  }
+  .wd-prose :global(td) {
+    padding: 8px 12px; border-bottom: 1px solid rgba(0,0,0,0.07);
+    vertical-align: top;
+  }
+
+  /* ── Share ── */
+  .share-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 2.4rem 0 0;
+  }
+  .share-label {
+    font-family: 'Gotham Light', sans-serif; font-size: 10px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(0,0,0,0.35); margin-right: 4px;
+  }
+  .share-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px;
+    border: 1px solid rgba(0,0,0,0.18);
+    color: rgba(0,0,0,0.55);
+    background: none; cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .share-btn:hover { border-color: #19E3C4; color: #19E3C4; }
+  .copy-confirm {
+    font-family: 'Gotham Light', sans-serif; font-size: 10px;
+    letter-spacing: 0.1em; color: #19E3C4;
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .copy-confirm.show { opacity: 1; }
+
+  /* ── Related articles ── */
+  .related-section { padding-top: 3rem; }
+  .related-label {
+    font-family: 'Gotham Light', sans-serif; font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(0,0,0,0.38); margin: 1.6rem 0 1.4rem;
+  }
+  .related-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  }
+  .related-card {
+    text-decoration: none; color: inherit;
+    display: flex; flex-direction: column;
+  }
+  .related-card:hover .related-title { color: #19E3C4; }
+  .related-thumb {
+    width: 100%; aspect-ratio: 16/9; overflow: hidden;
+    background: rgba(0,0,0,0.06); margin-bottom: 12px;
+  }
+  .related-thumb img {
+    width: 100%; height: 100%; object-fit: cover;
+    display: block; transition: transform 0.4s ease;
+  }
+  .related-card:hover .related-thumb img { transform: scale(1.04); }
+  .related-thumb-fill {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, rgba(25,227,196,0.12) 0%, rgba(0,0,0,0.06) 100%);
+  }
+  .related-body { flex: 1; }
+  .related-title {
+    font-family: 'Gotham Light', sans-serif; font-size: 13px;
+    font-weight: 300; line-height: 1.45; letter-spacing: 0.02em;
+    color: rgba(0,0,0,0.82); margin: 5px 0 6px;
+    transition: color 0.2s;
+  }
+  .related-date {
+    font-family: 'Gotham Light', sans-serif; font-size: 10px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(0,0,0,0.35); margin: 0;
+  }
+</style>
+
+<script>
+  // ── Progress bar ──
+  const bar = document.getElementById('progress-bar');
+  if (bar) {
+    window.addEventListener('scroll', () => {
+      const d = document.documentElement;
+      const pct = d.scrollHeight > d.clientHeight
+        ? (d.scrollTop / (d.scrollHeight - d.clientHeight)) * 100 : 0;
+      bar.style.width = pct + '%';
+    }, { passive: true });
+  }
+
+
+  // ── ToC active highlight ──
+  const tocLinks = document.querySelectorAll<HTMLAnchorElement>('.toc-link');
+  if (tocLinks.length) {
+    const sectionObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        const id = e.target.id;
+        const link = document.querySelector<HTMLElement>(`.toc-link[href="#${id}"]`);
+        if (link) {
+          link.style.color = e.isIntersecting ? '#19E3C4' : '';
+        }
+      });
+    }, { rootMargin: '-10% 0px -80% 0px' });
+    document.querySelectorAll('.wd-prose h2, .wd-prose h3').forEach(h => {
+      if (h.id) sectionObs.observe(h);
+    });
+  }
+
+  // ── H2 scroll-in animation ──
+  const h2elems = document.querySelectorAll<HTMLElement>('.wd-prose h2');
+  // Set hidden state first, then observe on next frame so the hidden state is painted
+  h2elems.forEach(h => {
+    h.style.opacity = '0';
+    h.style.transform = 'translateY(14px)';
+  });
+  requestAnimationFrame(() => {
+    h2elems.forEach(h => {
+      h.style.transition = 'opacity 0.55s ease, transform 0.55s ease';
+    });
+    const h2anim = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const el = e.target as HTMLElement;
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+          h2anim.unobserve(el);
+        }
+      });
+    }, { threshold: 0 });
+    h2elems.forEach(h => h2anim.observe(h));
+  });
+
+  // ── Share: copy link ──
+  const copyBtn = document.getElementById('copy-btn');
+  const copyConfirm = document.getElementById('copy-confirm');
+  copyBtn?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      if (copyConfirm) {
+        copyConfirm.textContent = 'Copied';
+        copyConfirm.classList.add('show');
+        setTimeout(() => copyConfirm.classList.remove('show'), 2000);
+      }
+    } catch {}
+  });
+</script>

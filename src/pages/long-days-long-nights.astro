@@ -1,0 +1,153 @@
+﻿---
+import ArticleLayout from '../layouts/ArticleLayout.astro';
+---
+
+<ArticleLayout title="Long Days, Longer Nights | Wavey Dynamics" heading="LONG DAYS, LONGER NIGHTS" subheading="Tales of a motorsport engineer." image="/images/pages/long-days-hero.jpg" imagePosition="center 22%" description="Long Days, Longer Nights — personal reflections on a life in motorsport engineering by Wavey Dynamics director Jahee Campbell-Brennan.">
+
+  <p class="mb-5 leading-relaxed">For me, the end of a year is a moment to pause and take stock. When I did that over the holidays, I took note of the projects I've worked on, what I've learned, the highs, the lows, the laughs and the harder moments, one word kept coming to me: gratitude.</p>
+
+  <p class="mb-10 leading-relaxed">The previous 18 months began with a move from London to Northamptonshire and the beginning of a new chapter with One Group Engineering and the legend that is Ron Hartvelt. New spaces, new opportunities and a lot of learning.</p>
+
+  <figure class="my-10">
+    <img src="/images/pages/longdays-sunrisecommute.jpg" alt="Sunrise on the new commute, through wheat fields"
+      class="max-w-[850px] w-full h-[500px] object-cover"
+      style="object-position: center center" />
+    <figcaption class="mt-2 text-xs text-(--color-muted) italic">Sunrise on the new commute, through wheat fields. Beats the London Underground!</figcaption>
+  </figure>
+
+  <p class="mb-10 leading-relaxed">What follows is a snapshot of some of the projects from this period. Not a highlight reel, just the kind of work that quietly builds good judgment, experience, and a few situations that put some hairs on the chest.</p>
+
+  <h2 class="mt-14 mb-5">Races, Championships &amp; Trackside Ops</h2>
+
+  <p class="mb-5 leading-relaxed">There were some great times trackside in 2024/25. Starting with the GT World Challenge (GTWC) Sprint Cup, going into Macau GP and the Nurburgring 24h.</p>
+
+  <figure class="my-10">
+    <img src="/images/pages/longdays-gtwcbarcelona.jpg" alt="GTWC Barcelona, the end of a season and our first Gold!"
+      class="max-w-[600px] w-full h-[700px] object-cover"
+      style="object-position: center 20%" />
+    <figcaption class="mt-2 text-xs text-(--color-muted) italic">GTWC Barcelona, the end of a season and our first Gold!</figcaption>
+  </figure>
+
+  <p class="mb-5 leading-relaxed">One of the moments that defined this period for me came during a GT World Challenge round at Magny-Cours, supporting LIQUI MOLY Team Engstler by One Group.</p>
+
+  <p class="mb-5 leading-relaxed">For the first session of the weekend, we had made the wrong call on cold tyre pressures and we came in too low. We made the painful decision to add air to our (hot) tyres to salvage the session.</p>
+
+  <p class="mb-5 leading-relaxed">To make an uncomfortable situation worse, too much air went in and had to come back out. By that point, we had no reliable reference for the effective cold pressure of that set.</p>
+
+  <p class="mb-5 leading-relaxed">With the next set already baking in the ovens ahead of our scheduled tyre change, we had to make a quick correction. Easier said than done — 0.2 bar of ambient air becomes anywhere between 0.3 and 0.28 bar on track, and without stabilised tyre data, we couldn't properly map the adjustment.</p>
+
+  <p class="mb-5 leading-relaxed">With our cold, long run-compressed and representative-running limited, changing fuel loads, used tyres, and evolving track conditions, all muddying the picture, we spent the next few sessions locking in a workable baseline for qualifying and the race.</p>
+
+  <p class="mb-5 leading-relaxed">At the time, it felt like a situation I owned entirely.</p>
+
+  <p class="mb-5 leading-relaxed">We did manage to get things under control and come away with a solid result, which ultimately set us up to win the championship.</p>
+
+  <p class="mb-5 leading-relaxed">What stayed with me from that weekend was how quickly things move from theoretical to very real and the importance of staying calm and systematic when they do.</p>
+
+  <p class="mb-5 leading-relaxed">Macau GP and the Nurburgring 24h were very different challenges again — different cars, different constraints, different rhythms.</p>
+
+  <p class="mb-10 leading-relaxed">Being on shift for 40 hours straight requires another story of its own.</p>
+
+  <figure class="my-10">
+    <img src="/images/pages/longdays-macaugp.jpg" alt="Macau GP team photo"
+      class="max-w-[650px] w-full h-[500px] object-cover"
+      style="object-position: center 40%" />
+    <figcaption class="mt-2 text-xs text-(--color-muted) italic">Macau GP is a very different race format to European calendars, with unique challenges</figcaption>
+  </figure>
+
+  <h2 class="mt-14 mb-5">Vehicle Systems, Architecture &amp; Development</h2>
+
+  <p class="mb-5 leading-relaxed">I've quite enjoyed working across the range of vehicles that we've been involved with. From supporting factory GT4 programmes running alongside F1 events, to UK TCR weekends at Snetterton. The variety matters.</p>
+
+  <p class="mb-5 leading-relaxed">Moving between categories exposed me to a much broader set of problems than you typically see in a neatly scoped motorsport role.</p>
+
+  <p class="mb-5 leading-relaxed">One moment that stands out was having to re-spec a battery after a series of 'random' errors which arose every time our car came to box. Battery voltage was OK, but after investigation we realised that the home-fligated battery was undersized and was dropping certain modules below voltage on engine start. Hence shutting a workable solution wasn't something I expected, but it pulled me deeper into electrical theory and systems than I had been before.</p>
+
+  <p class="mb-5 leading-relaxed">This is also where my interest in electrical architecture and CAN systems really took hold. Learning how to add sensors to a loom, configure ECUs to receive and interpret those signals, and diagnose faults at a system level was unexpectedly engaging.</p>
+
+  <p class="mb-10 leading-relaxed">Specifying the electrical architecture for a client-level, track-only hypercar currently in development has been something I've genuinely enjoyed; balancing modules and managing Baud rates across CAN buses has been a proper highlight.</p>
+
+  <p class="mb-5 leading-relaxed">In practice, this work has involved:</p>
+  <ul class="wd-list mb-10 space-y-2 leading-relaxed list-none">
+    <li>Lap simulation and correlation</li>
+    <li>Electrical systems and loom integration</li>
+    <li>Electrical fault diagnoses (chasing grounds in abundance!)</li>
+    <li>CAN architecture and management</li>
+    <li>Racecar systems engineering using RaceCon, Sysma, M1</li>
+  </ul>
+
+  <figure class="my-10">
+    <img src="/images/pages/longdays-nurburgringreward.jpg" alt="Nurburgring 24h class winner trophy"
+      class="max-w-[600px] w-full h-[500px] object-cover"
+      style="object-position: center center" />
+    <figcaption class="mt-2 text-xs text-(--color-muted) italic">The reward for that 65th shift at the Nurburgring 24h was 3rd in class.</figcaption>
+  </figure>
+
+  <h2 class="mt-14 mb-5">Software, Data &amp; Analysis</h2>
+
+  <p class="mb-5 leading-relaxed">A lot of the value I've added over the last couple of years hasn't come from chasing absolute accuracy. In practice, much of the job revolves around reducing uncertainty and making data useful under real constraints.</p>
+
+  <p class="mb-5 leading-relaxed">Analysing car data and presenting it to the wider team and drivers is par for the course, but one advantage of modern day machinery is how ease of inability of tools which shorten the time required to both for processing and analysing data.</p>
+
+  <p class="mb-5 leading-relaxed">One of the more useful Python tools I built, sampled real sensor data from our cars to generate a track profile, including curvature, elevation change, gradients, and bump characteristics. We used this directly to create more representative tracks for lap simulation work. If we had a car running laps somewhere, we could generate a track map.</p>
+
+  <p class="mb-10 leading-relaxed">Another tool I developed, sampled historic timing data from a championship we were involved in to highlight the qualifying strategies of the top 5 cars. This was real, helpful in allowing us to predict how the tyre will switch on for our sessions, and inform our decisions on when to set the push lap for our drivers.</p>
+
+  <figure class="my-10">
+    <img src="/images/pages/longdays-pythonheatmap.png" alt="Python qualifying data heatmap"
+      class="max-w-[600px] w-full" />
+    <figcaption class="mt-2 text-xs text-(--color-muted) italic">Python tools a plenty.</figcaption>
+  </figure>
+
+  <p class="mb-5 leading-relaxed">Not every problem needs a new tool/chain. In several cases, Excel-based workflows were still the fastest and most robust way to explore data. One example came at Macau, where we were trying to predict changes in aerodynamic behavior following setup adjustments.</p>
+
+  <p class="mb-5 leading-relaxed">Practical aerodynamic work requires strict gating to remove noise and is delicate at best. With just a few valid data points from the small number of laps we ran, the dataset was limited from the outset.</p>
+
+  <p class="mb-5 leading-relaxed">This task took me into areas of statistical analysis I hadn't needed to explore before. Eventually Bayesian inference proved to be the most robust way to deal with the uncertainty and arrive at a defensible conclusion.</p>
+
+  <p class="mb-10 leading-relaxed">Both of these examples reinforced the same idea: the usefulness of analysis is defined less by complexity and more by whether it helps a decision get made — that's the objective.</p>
+
+  <p class="mb-5 leading-relaxed">This work has involved:</p>
+  <ul class="wd-list mb-10 space-y-2 leading-relaxed list-none">
+    <li>Data analysis and visualisation</li>
+    <li>Excel and VBA tooling</li>
+    <li>Python-based engineering tools</li>
+    <li>Working with sparse, noisy, and uncertain datasets</li>
+    <li>Statistical methods applied under real-world constraints</li>
+  </ul>
+
+  <h2 class="mt-14 mb-5">Vehicle Design, Manufacturing &amp; Delivery</h2>
+
+  <p class="mb-5 leading-relaxed">One of the major projects we've been working during this period is the design of a hypercar from a blank sheet. Honestly, that's about as good as it gets — something my younger self would have jumped at, and a real highlight.</p>
+
+  <p class="mb-5 leading-relaxed">As we began the detailed design work, we had many practical questions about the cabin design — I sketched out and built a very simple but incredibly useful physical buck of the initial chassis concept, which we made from plywood. We used it to inform ingress and egress approaches, seating &amp; overall position, sightlines, and even early door hinge ideas. Having something you can physically sit in changes conversations fast and gives follow-on design work detailed foundations — right first time is the philosophy!</p>
+
+  <p class="mb-5 leading-relaxed">I never expected to revisit my woodworking skills in a high performance engineering environment, but sometimes it is absolutely the best tool for the job.</p>
+
+  <p class="mb-10 leading-relaxed">Another unexpected rabbit hole was diving deep into bolted joint specification while evaluating a dynamic simulation rig. I ended up spending a good chunk of time getting to grips with VDI standards — joint stiffness, preload, clamping load. Really interesting foundational engineering stuff and a reminder that some of the most important engineering decisions live in places that are easy to overlook.</p>
+
+  <p class="mb-5 leading-relaxed">We've covered:</p>
+  <ul class="wd-list mb-10 space-y-2 leading-relaxed list-none">
+    <li>Mechanical design across all vehicle sub-systems</li>
+    <li>Bolted joint specification using VDI methodologies</li>
+    <li>Quoting and scoping realistic design effort</li>
+  </ul>
+
+  <p class="mb-10 leading-relaxed">All of this work has been done with One Group Engineering at our facility just off Sywell Aerodrome in Northamptonshire.</p>
+
+  <figure class="my-10">
+    <img src="/images/pages/longdays-sywellworkshop.jpg" alt="One Group workshop at Sywell Aerodrome"
+      class="max-w-[850px] w-full h-[500px] object-cover"
+      style="object-position: center center" />
+    <figcaption class="mt-2 text-xs text-(--color-muted) italic">One half of One Group's top class workshop facilities at Sywell Aerodrome</figcaption>
+  </figure>
+
+  <p class="mb-5 leading-relaxed">We're engineers and technicians first. The emphasis is on clear thinking, close collaboration, and getting the fundamentals right, and with a useful workshop and a very practical team. It's an environment where ideas are easy to challenge, quick to evolve, and don't stay theoretical for long.</p>
+
+  <p class="mb-12 leading-relaxed">We're fully committed to current projects, but always open to new work, and I can guarantee you that your project will find a good home here. Get in touch.</p>
+
+  <p class="mb-12 italic text-(--color-muted)">– Jahee Campbell-Brennan</p>
+
+  <a href="/contact" class="inline-block border border-(--color-border) px-6 py-2 text-sm no-underline hover:border-(--color-accent) hover:text-(--color-accent) transition-colors">Get in touch →</a>
+
+</ArticleLayout>

@@ -1,0 +1,48 @@
+---
+import Layout from './Layout.astro';
+
+interface Props {
+  title: string;
+  heading: string;
+  subheading?: string;
+  description?: string;
+  image?: string;
+}
+
+const { title, heading, subheading, description, image } = Astro.props;
+---
+
+<Layout title={title} description={description}>
+  <section class="relative w-full" style="min-height:180px;height:calc(35vh + 10px);">
+    {image ? (
+      <div class="absolute inset-0 bg-cover bg-center"
+        style={`background-image:linear-gradient(rgba(25,227,196,0.18), rgba(10,12,15,0.55)),url('${image}');`}></div>
+    ) : (
+      <div class="absolute inset-0 flex items-center justify-center" style="background-color:#1a1d21;">
+        <svg width="72" height="88" viewBox="0 0 72 88" fill="none" xmlns="http://www.w3.org/2000/svg"
+          style="filter:drop-shadow(0 0 18px rgba(25,227,196,0.55));">
+          <path d="M36 4C20.536 4 8 16.536 8 32c0 10.314 5.524 19.338 13.75 24.33V60a2 2 0 0 0 2 2h28.5a2 2 0 0 0 2-2v-3.67C62.476 51.338 68 42.314 68 32 68 16.536 55.464 4 36 4z"
+            fill="white" fill-opacity="0.88"/>
+          <rect x="23" y="66" width="26" height="4" rx="2" fill="white" fill-opacity="0.65"/>
+          <rect x="26" y="74" width="20" height="4" rx="2" fill="white" fill-opacity="0.45"/>
+        </svg>
+      </div>
+    )}
+    <div class="absolute inset-0 flex items-end pb-[20px]">
+      <div class="w-full pl-5 md:pl-[200px] lg:pl-[412px]">
+        <h1 class="wd-hero-h1" set:html={heading}></h1>
+      </div>
+    </div>
+  </section>
+
+  {subheading && (
+    <div class="max-w-[1030px] mx-auto px-5 md:px-[65px] pt-[15px] pb-[15px]">
+      <p class="wd-subheading">{subheading}</p>
+      <div class="mt-4 w-[50px] h-[2px] bg-black"></div>
+    </div>
+  )}
+
+  <div class="max-w-[1030px] mx-auto px-5 md:px-[65px] pt-12 pb-24">
+    <slot />
+  </div>
+</Layout>

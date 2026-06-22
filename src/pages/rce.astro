@@ -1,0 +1,121 @@
+---
+import ArticleLayout from '../layouts/ArticleLayout.astro';
+
+const articles = [
+  {
+    category: "Technology",
+    title: "Time Management",
+    issue: "Volume 31 Issue 1",
+    date: "January 2021",
+    description: "An exploration into the engineering journey of a 24h endurance race, covering the preparation from first practice, through to qualifying and the execution of the race with emphasis on the race engineering requirements. Input from 2024 Le Mans winners Toyota Gazoo Racing, IMSA Teams McLaren, BMW Team M and WEC & IMSA engineer Jamie Gomeche.",
+  },
+  {
+    category: "Technology",
+    title: "Model Behaviour",
+    issue: "Volume 30 Issue 9",
+    date: "September 2020",
+    description: "A comprehensive insight into the art of scale model construction and testing. Covering the history of the heroes and drivers behind it, consideration of model materials, model construction, practical tips on scale model testing and concepts such as dynamic similarity and correlation methodology. Contributions from Toyota Gazoo Racing, ORECA and Dominic Harlow.",
+  },
+  {
+    category: "Technology",
+    title: "Feel the Burn",
+    issue: "Volume 30 Issue 6",
+    date: "June 2020",
+    description: "An exploration into the revolution in thermal efficiency of ICE, inspired in part by modern fuel and battery technology. Focusing around ICE and the various technologies that have enabled lean burn combustion regimes such as pre-chamber ignition, stratified charge delivery, knock prediction and advances in CFD modelling.",
+  },
+  {
+    category: "Technology",
+    title: "The Art of Setup",
+    issue: "Volume 30 Issue 5",
+    date: "May 2020",
+    description: "A high level overview of vehicle dynamics and aerodynamics setup considerations in modern motorsport. With discussion on the influence of weather conditions, temperature, altitude, sprint and endurance racing and race and qualifying scenarios on the tyre. As the trend continues, the operating conditions imposed on the tyre by the overall vehicle configuration are the key focus.",
+  },
+  {
+    category: "Technology",
+    title: "Shake Down",
+    issue: "Volume 30 Issue 3",
+    date: "March 2020",
+    description: "A technical insight into 7-Post chassis shaker rigs and K&C (Kinematics & Compliance) rigs as instrumental tools in the development of modern race cars — how and why they are used and how the data they produce is fed back into the design process. Communicating their growing use in the era of data driven engineering.",
+  },
+  {
+    category: "Technology",
+    title: "The Suspension Bridge",
+    issue: "Volume 30 Issue 2",
+    date: "February 2020",
+    description: "An in-depth exploration of modern motorsport suspension technology. Taking the reader on the journey of forces from the tyre contact patch to the chassis. Further on, modern mode decoupling systems such as FRIC are explored and finally lesser known technologies such as inerters.",
+  },
+  {
+    category: "Electronics",
+    title: "Sensors — Anatomy of a Racecar",
+    issue: "Issue 1",
+    date: "January 2020",
+    description: "A technical piece on the evolution of sensor technology and its application in modern, high-tech motorsport. Covering technology used to monitor and control the main vehicle sub-systems of powertrain, chassis and aerodynamics.",
+  },
+  {
+    category: "Technology",
+    title: "Technology in Formula Student",
+    issue: "Volume 29 Issue 10",
+    date: "October 2019",
+    description: "An in-depth technical review of the innovative technology brought to the 2018 FSUK competition — suspension, a ground-effect front wing, rear wheel steering system, electrical powertrain solutions, mode decoupled suspension system among others.",
+  },
+  {
+    category: "Feature",
+    title: "Formula Student UK",
+    issue: "Volume 29 Issue 10",
+    date: "October 2019",
+    description: "A technical review of the competition winning car from MoRac Racing, including interviews with Team Manager.",
+  },
+];
+
+const webSeries = [
+  "Tyre Dynamics",
+  "Wheels & Suspension",
+  "Kinematics & Compliance",
+  "Springs & Dampers",
+  "Chassis",
+  "Data Acquisition",
+  "Practical Applications",
+];
+---
+
+<ArticleLayout
+  title="Racecar Engineering Magazine | Wavey Dynamics"
+  heading="RACECAR ENGINEERING"
+  subheading="Technical writing for the motorsport community."
+  image="/images/pages/rce-hero.jpg"
+  imagePosition="center"
+  description="Print features in Racecar Engineering Magazine by Wavey Dynamics director Jahee Campbell-Brennan — suspension, aerodynamics, tyres and race engineering."
+>
+
+  <p class="mb-5 leading-relaxed">Technical writing is a way to communicate ideas, share knowledge and inspire thought. We take pleasure in sharing our understanding and experience with the motorsport community through articles featured in Racecar Engineering Magazine.</p>
+
+  <p class="mb-12 leading-relaxed">With guest interviews from companies at the cutting edge of their specialties, they are also a great way to keep up-to-date with the motorsport network and current and future technologies.</p>
+
+  <h2 class="mb-10 uppercase tracking-widest">Print Features</h2>
+
+  <div class="space-y-0">
+    {articles.map((article, i) => (
+      <div>
+        <div class="py-8">
+          <div class="flex items-baseline gap-4 mb-2">
+            <span class="text-[10px] uppercase tracking-[0.2em]" style="font-family:'Gotham Light',sans-serif;color:rgba(25,227,196,0.9);">{article.category}</span>
+            <span class="text-[11px]" style="font-family:'Gotham Light',sans-serif;color:rgba(0,0,0,0.38);">{article.issue} &mdash; {article.date}</span>
+          </div>
+          <h3 class="text-[17px] mb-3" style="font-family:'Gotham Light',sans-serif;font-weight:300;color:rgba(0,0,0,0.82);">{article.title}</h3>
+          <p class="leading-relaxed text-[14px]" style="color:rgba(0,0,0,0.6);">{article.description}</p>
+        </div>
+        {i < articles.length - 1 && <hr class="border-gray-100" />}
+      </div>
+    ))}
+  </div>
+
+  <div class="mt-16">
+    <h2 class="mb-6 uppercase tracking-widest">Web Series</h2>
+    <p class="mb-5 leading-relaxed">A mini-series of articles on vehicle dynamics fundamentals published on the Racecar Engineering website, covering:</p>
+    <ul class="wd-list space-y-2 leading-relaxed list-none mb-8">
+      {webSeries.map(topic => <li>{topic}</li>)}
+    </ul>
+    <p class="leading-relaxed">The series can be found on the <a href="https://www.racecar-engineering.com" target="_blank" rel="noopener" class="text-(--color-accent) no-underline hover:underline">Racecar Engineering website</a> via Jahee's profile.</p>
+  </div>
+
+</ArticleLayout>

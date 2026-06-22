@@ -1,0 +1,192 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Work Sans';
+  src: url('/fonts/WorkSans-ExtraLight.woff2') format('woff2'),
+       url('/fonts/WorkSans-ExtraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gotham Light';
+  src: url('/fonts/Gotham-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gotham Book';
+  src: url('/fonts/Gotham-Book.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gotham Medium';
+  src: url('/fonts/Gotham-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Futura Book';
+  src: url('/fonts/Futura-Book.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --color-canvas: #000000;
+  --color-text: rgba(255, 255, 255, 0.68);
+  --color-accent: #19E3C4;
+  --color-border: #2a2a2a;
+  --color-muted: #999999;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(rgba(25, 227, 196, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(25, 227, 196, 0.08) 1px, transparent 1px);
+  background-size: 51px 51px;
+  color: rgba(0, 0, 0, 0.72);
+  font-family: 'Gotham Light', sans-serif;
+  font-size: 16px;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Accent bullet lists */
+.wd-list { list-style: none; padding-left: 0; }
+.wd-list > li { position: relative; padding-left: 13px; }
+.wd-list > li::before {
+  content: ''; position: absolute; left: 0; top: 9px;
+  width: 5px; height: 5px;
+  background-color: var(--color-accent);
+}
+.wd-list > li > ul,
+.wd-list > li > .wd-list,
+.wd-list > li > .wd-list-2,
+.wd-list > li > .wd-list-3 {
+  margin-left: 8px;
+  margin-top: 0.25rem;
+}
+.wd-list-2 { list-style: none; padding-left: 0; }
+.wd-list-2 > li { position: relative; padding-left: 11px; }
+.wd-list-2 > li::before {
+  content: ''; position: absolute; left: 0; top: 9px;
+  width: 4px; height: 4px;
+  background-color: rgba(0,0,0,0.28);
+}
+.wd-list-2 > li > ul,
+.wd-list-2 > li > .wd-list-2,
+.wd-list-2 > li > .wd-list-3 {
+  margin-left: 0.75rem;
+  margin-top: 0.25rem;
+}
+.wd-list-3 { list-style: none; padding-left: 0; }
+.wd-list-3 > li { position: relative; padding-left: 8px; }
+.wd-list-3 > li::before {
+  content: ''; position: absolute; left: 0; top: 10px;
+  width: 3px; height: 3px;
+  background-color: rgba(0,0,0,0.18);
+}
+
+h1 {
+  font-family: 'Gotham Light', sans-serif;
+  font-weight: 300;
+  font-size: 36px;
+}
+
+h2 {
+  font-family: 'Futura Book', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  border-left: 3px solid #19E3C4;
+  border-bottom: 1.5px solid #19E3C4;
+  border-bottom-left-radius: 6px;
+  padding-left: 12px;
+  padding-bottom: 5px;
+  width: fit-content;
+  line-height: 1.4;
+}
+
+h3 {
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 200;
+}
+
+p {
+  font-family: 'Gotham Light', sans-serif;
+  font-weight: 300;
+}
+
+/* ─── Hero ───────────────────────────────────────────── */
+.wd-hero-h1 {
+  display: inline;
+  background-color: white;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 1px;
+  letter-spacing: 0;
+  line-height: 1.584;
+  font-family: 'Gotham Light', sans-serif;
+  font-weight: 300;
+  font-size: clamp(18px, 3vw, 32px);
+  text-transform: uppercase;
+  color: #000000;
+}
+
+/* ─── Page subheading ────────────────────────────────── */
+.wd-subheading {
+  font-size: 18px;
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 200;
+}
+
+/* ─── Desktop nav dropdowns ──────────────────────────── */
+.wd-nav-drop {
+  display: block;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  color: var(--color-text);
+  transition: color 150ms, background-color 150ms;
+}
+.wd-nav-drop:hover {
+  color: var(--color-accent);
+  background-color: #141618;
+}
+
+/* ─── Mobile nav ─────────────────────────────────────── */
+.wd-mob-label {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: 0.75rem;
+  font-family: 'Gotham Light', sans-serif;
+  color: rgba(255, 255, 255, 0.3);
+}
+.wd-mob-link {
+  display: block;
+  padding: 0.625rem 0;
+  text-decoration: none;
+  font-size: 14px;
+  font-family: 'Gotham Light', sans-serif;
+  color: rgba(255, 255, 255, 0.75);
+}
+.wd-mob-primary { color: rgba(255, 255, 255, 0.9); }

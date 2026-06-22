@@ -1,0 +1,146 @@
+---
+import { getCollection } from 'astro:content';
+import ArticleLayout from '../layouts/ArticleLayout.astro';
+
+function extractFirstImage(body: string): string | null {
+  const m = body.match(/!\[.*?\]\((https?:\/\/[^\s)]+)\)/);
+  return m ? m[1] : null;
+}
+
+const allPosts = await getCollection('blog', ({ id }) => !id.startsWith('_'));
+const posts = allPosts
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .map(p => ({ ...p, thumbSrc: p.data.coverImage || extractFirstImage(p.body ?? '') }));
+
+const categoryList = ['All', 'Vehicle Dynamics', 'Aerodynamics', 'Tech Bites', 'News', 'Racecar Engineering'];
+---
+
+<ArticleLayout
+  title="Field Notes | Wavey Dynamics"
+  heading="FIELD NOTES"
+  subheading="Engineering insight, technical analysis and updates from the field."
+  image="/images/pages/learn-hero.jpg"
+  imagePosition="center"
+  description="Field Notes from Wavey Dynamics — technical analysis, engineering insight and motorsport observations by director Jahee Campbell-Brennan."
+>
+
+  <div style="margin-bottom:1.75rem;">
+    <input
+      id="search-input"
+      type="search"
+      placeholder="Search field notes…"
+      style="width:100%;max-width:420px;background:none;border:none;border-bottom:1px solid rgba(0,0,0,0.18);padding:6px 0;font-family:'Gotham Light',sans-serif;font-size:13px;color:rgba(0,0,0,0.72);outline:none;letter-spacing:0.02em;"
+    />
+  </div>
+
+  <div class="flex flex-wrap gap-2 mb-10">
+    {categoryList.map((cat, i) => (
+      <button
+        class="cat-btn text-[10px] uppercase tracking-widest px-4 py-1.5 border transition-colors cursor-pointer"
+        data-cat={cat}
+        style={i === 0
+          ? "border-color:#19E3C4;color:#19E3C4;font-family:'Gotham Light',sans-serif;"
+          : "border-color:#2a2a2a;font-family:'Gotham Light',sans-serif;"}
+      >
+        {cat}
+      </button>
+    ))}
+  </div>
+
+  <div id="post-list">
+    {posts.map((post) => {
+      const cats = post.data.categories ?? [];
+      return (
+        <div class="post-card border-b border-gray-200 py-6 last:border-b-0" data-cats={cats.join('|')} data-search={`${post.data.title} ${post.data.excerpt ?? ''} ${cats.join(' ')}`.toLowerCase()}>
+          <a href={`/blog/${post.id}`} class="flex flex-col sm:flex-row gap-4 sm:gap-8 items-start sm:items-center no-underline group">
+            {post.thumbSrc && (
+              <div class="w-full aspect-video sm:aspect-auto sm:w-[240px] sm:h-[170px] shrink-0 overflow-hidden">
+                <img src={post.thumbSrc} alt="" loading="lazy"
+                  style="width:100%;height:100%;object-fit:cover;display:block;" />
+              </div>
+            )}
+            <div class="flex-1 min-w-0">
+              {cats.length > 0 && (
+                <div class="flex gap-3 flex-wrap mb-2">
+                  {cats.map(cat => (
+                    <span class="text-[10px] uppercase tracking-[0.12em]"
+                      style="color:#19E3C4;font-family:'Gotham Light',sans-serif;">{cat}</span>
+                  ))}
+                </div>
+              )}
+              <p class="text-[11px] uppercase tracking-widest mb-2"
+                style="color:rgba(0,0,0,0.4);font-family:'Gotham Light',sans-serif;">
+                {new Date(post.data.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+              </p>
+              <h3 class="mb-3 leading-snug">
+                <span class="text-[18px]"
+                  style="font-family:'Gotham Light',sans-serif;font-weight:300;color:rgba(0,0,0,0.82);">
+                  {post.data.title}
+                </span>
+              </h3>
+              {post.data.excerpt && (
+                <p class="text-[15px] leading-relaxed mb-4" style="color:rgba(0,0,0,0.55);">
+                  {post.data.excerpt}
+                </p>
+              )}
+              <span class="text-[11px] uppercase tracking-widest"
+                style="font-family:'Gotham Light',sans-serif;color:rgba(0,0,0,0.4);">
+                Read More →
+              </span>
+            </div>
+          </a>
+        </div>
+      );
+    })}
+  </div>
+
+  <p id="no-results" class="mt-8 text-[12px] text-center hidden"
+    style="color:rgba(0,0,0,0.3);font-family:'Gotham Light',sans-serif;">
+    No field notes in this category yet.
+  </p>
+
+  <script>
+    const ACCENT = '#19E3C4';
+    const BORDER_INACTIVE = '#2a2a2a';
+
+    const buttons = document.querySelectorAll<HTMLButtonElement>('.cat-btn');
+    const cards = document.querySelectorAll<HTMLElement>('.post-card');
+    const noResults = document.getElementById('no-results')!;
+
+    let currentCat = 'All';
+    let currentSearch = '';
+
+    function activate(target: string, search: string) {
+      buttons.forEach(btn => {
+        const on = btn.dataset.cat === target;
+        btn.style.borderColor = on ? ACCENT : BORDER_INACTIVE;
+        btn.style.color = on ? ACCENT : '';
+      });
+
+      let visible = 0;
+      cards.forEach(card => {
+        const cats = (card.dataset.cats ?? '').split('|').filter(Boolean);
+        const text = (card.dataset.search ?? '').toLowerCase();
+        const catMatch = target === 'All' || cats.includes(target);
+        const searchMatch = !search || text.includes(search);
+        const show = catMatch && searchMatch;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
+      });
+
+      noResults.classList.toggle('hidden', visible > 0);
+    }
+
+    buttons.forEach(btn => btn.addEventListener('click', () => {
+      currentCat = btn.dataset.cat ?? 'All';
+      activate(currentCat, currentSearch);
+    }));
+
+    const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
+    searchInput?.addEventListener('input', () => {
+      currentSearch = searchInput.value.trim().toLowerCase();
+      activate(currentCat, currentSearch);
+    });
+  </script>
+
+</ArticleLayout>

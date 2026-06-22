@@ -1,0 +1,104 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="H2 Style Options | Wavey Dynamics" robots="noindex, nofollow">
+<style>
+  @font-face {
+    font-family: 'Futura Light Italic';
+    src: url('/fonts/Futura-Light-Italic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+  }
+  @font-face {
+    font-family: 'Futura Light';
+    src: url('/fonts/Futura-Light.ttf') format('truetype');
+    font-weight: 300;
+  }
+  @font-face {
+    font-family: 'Futura Condensed Light';
+    src: url('/fonts/Futura-CondensedLight.otf') format('opentype');
+    font-weight: 300;
+  }
+  @font-face {
+    font-family: 'Futura Book';
+    src: url('/fonts/Futura-Book.ttf') format('truetype');
+    font-weight: 400;
+  }
+
+  .demo-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+  .demo-block {
+    padding: 32px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .demo-block:last-child { border-bottom: none; }
+  .demo-tag {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(0,0,0,0.28);
+    font-family: 'Gotham Light', sans-serif;
+    margin-bottom: 14px;
+  }
+  .demo-p {
+    font-size: 14px;
+    line-height: 1.72;
+    margin-top: 12px;
+    color: rgba(0,0,0,0.50);
+    font-family: 'Gotham Light', sans-serif;
+    font-weight: 300;
+  }
+
+  /* Shared style: left bar 3px, caps, 12px, tracking 0.10em */
+  .h2-bar {
+    font-size: 12px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    border-left: 3px solid #19E3C4;
+    padding-left: 12px;
+    color: rgba(0,0,0,0.82);
+    line-height: 1.4;
+    width: fit-content;
+    font-weight: 300;
+  }
+</style>
+
+<div class="demo-wrap">
+
+  <div class="demo-block">
+    <span class="demo-tag">Gotham Light</span>
+    <h2 class="h2-bar" style="font-family:'Gotham Light',sans-serif;">WHAT WE DELIVER</h2>
+    <p class="demo-p">Modern high-performance cars are engineered to do everything well. At the limit, compromise remains. Wavey Dynamics exists for those who want the undiluted version.</p>
+  </div>
+
+  <div class="demo-block">
+    <span class="demo-tag">Futura Light Italic</span>
+    <h2 class="h2-bar" style="font-family:'Futura Light Italic',sans-serif;font-style:italic;">WHAT WE DELIVER</h2>
+    <p class="demo-p">Modern high-performance cars are engineered to do everything well. At the limit, compromise remains. Wavey Dynamics exists for those who want the undiluted version.</p>
+  </div>
+
+  <div class="demo-block">
+    <span class="demo-tag">Futura Light</span>
+    <h2 class="h2-bar" style="font-family:'Futura Light',sans-serif;">WHAT WE DELIVER</h2>
+    <p class="demo-p">Modern high-performance cars are engineered to do everything well. At the limit, compromise remains. Wavey Dynamics exists for those who want the undiluted version.</p>
+  </div>
+
+  <div class="demo-block">
+    <span class="demo-tag">Futura Condensed Light</span>
+    <h2 class="h2-bar" style="font-family:'Futura Condensed Light',sans-serif;">WHAT WE DELIVER</h2>
+    <p class="demo-p">Modern high-performance cars are engineered to do everything well. At the limit, compromise remains. Wavey Dynamics exists for those who want the undiluted version.</p>
+  </div>
+
+  <div class="demo-block">
+    <span class="demo-tag">Futura Book</span>
+    <h2 class="h2-bar" style="font-family:'Futura Book',sans-serif;font-weight:400;">WHAT WE DELIVER</h2>
+    <p class="demo-p">Modern high-performance cars are engineered to do everything well. At the limit, compromise remains. Wavey Dynamics exists for those who want the undiluted version.</p>
+  </div>
+
+</div>
+</Layout>
